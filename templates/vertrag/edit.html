@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Vertrag bearbeiten</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.PartnerID.label(class="form-label") }}
+        {{ form.PartnerID(class="form-select") }}
+        {% if form.PartnerID.errors %}
+        <div class="text-danger">{{ form.PartnerID.errors[0] }}</div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.VonDatum.label(class="form-label") }}
+            {{ form.VonDatum(class="form-control", type="date") }}
+            {% if form.VonDatum.errors %}
+            <div class="text-danger">{{ form.VonDatum.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.BisDatum.label(class="form-label") }}
+            {{ form.BisDatum(class="form-control", type="date") }}
+            {% if form.BisDatum.errors %}
+            <div class="text-danger">{{ form.BisDatum.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="mb-3">
+        {{ form.VertragsStatus.label(class="form-label") }}
+        {{ form.VertragsStatus(class="form-select") }}
+        {% if form.VertragsStatus.errors %}
+        <div class="text-danger">{{ form.VertragsStatus.errors[0] }}</div>
+        {% endif %}
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('list_vertraege') }}" class="btn btn-secondary">Abbrechen</a>
+</form>
+{% endblock %}
+

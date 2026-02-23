@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Management - DBundDM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-weight='bold' fill='%231e3a8a'>🏨</text></svg>">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('index') }}">🏨 Hotel Management</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="stammdatenDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        📋 Stammdaten
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="stammdatenDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('list_kategorien') }}">📂 Zimmerkategorien</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('list_zimmer') }}">🛏️ Zimmer</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('list_gaeste') }}">👤 Gäste</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('list_partner') }}">🤝 B2B Partner</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('list_vertraege') }}">📜 Verträge</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('list_reservierungen') }}">📅 Reservierungen</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('list_rechnungen') }}">💰 Rechnungen</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4 mb-5 pb-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+        <strong>
+            {% if category == 'success' %}✓ Erfolg:
+            {% elif category == 'danger' %}✗ Fehler:
+            {% elif category == 'warning' %}⚠ Warnung:
+            {% else %}ℹ Info:
+            {% endif %}
+        </strong>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</div>
+
+<footer class="footer-fixed bg-dark text-white text-center py-2">
+    <div class="container">
+        <p class="mb-0 small">&copy; 2026 Hotel Management System - DBundDM</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

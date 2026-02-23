@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Dashboard</h1>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Zimmer</div>
+            <div class="card-body">
+                <h5 class="card-title">Gesamt: {{ zimmer_count }}</h5>
+                <p class="card-text">Frei: {{ zimmer_frei }} | Besetzt: {{ zimmer_besetzt }} | Wartung: {{ zimmer_wartung }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Reservierungen</div>
+            <div class="card-body">
+                <h5 class="card-title">Aktive: {{ aktive_reservierungen }}</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-header">Rechnungen</div>
+            <div class="card-body">
+                <h5 class="card-title">Offen: {{ offene_rechnungen }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

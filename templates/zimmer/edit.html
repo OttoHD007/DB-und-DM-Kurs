@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Zimmer bearbeiten</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.Zimmernummer.label(class="form-label") }}
+        {{ form.Zimmernummer(class="form-control") }}
+        {% if form.Zimmernummer.errors %}
+        <div class="text-danger">{{ form.Zimmernummer.errors[0] }}</div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.PreisProNacht.label(class="form-label") }}
+            {{ form.PreisProNacht(class="form-control", step="0.01") }}
+            {% if form.PreisProNacht.errors %}
+            <div class="text-danger">{{ form.PreisProNacht.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.Etage.label(class="form-label") }}
+            {{ form.Etage(class="form-control") }}
+            {% if form.Etage.errors %}
+            <div class="text-danger">{{ form.Etage.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.Status.label(class="form-label") }}
+            {{ form.Status(class="form-select") }}
+            {% if form.Status.errors %}
+            <div class="text-danger">{{ form.Status.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.KategorieID.label(class="form-label") }}
+            {{ form.KategorieID(class="form-select") }}
+            {% if form.KategorieID.errors %}
+            <div class="text-danger">{{ form.KategorieID.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('list_zimmer') }}" class="btn btn-secondary">Abbrechen</a>
+</form>
+{% endblock %}
+

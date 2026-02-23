@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Detail bearbeiten</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.ReservierungsID.label(class="form-label") }}
+            {{ form.ReservierungsID(class="form-select") }}
+            {% if form.ReservierungsID.errors %}
+            <div class="text-danger">{{ form.ReservierungsID.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.ZimmerID.label(class="form-label") }}
+            {{ form.ZimmerID(class="form-select") }}
+            {% if form.ZimmerID.errors %}
+            <div class="text-danger">{{ form.ZimmerID.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            {{ form.AnzahlZimmer.label(class="form-label") }}
+            {{ form.AnzahlZimmer(class="form-control") }}
+            {% if form.AnzahlZimmer.errors %}
+            <div class="text-danger">{{ form.AnzahlZimmer.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.PreisProNachtZumZeitpunkt.label(class="form-label") }}
+            {{ form.PreisProNachtZumZeitpunkt(class="form-control", step="0.01") }}
+            {% if form.PreisProNachtZumZeitpunkt.errors %}
+            <div class="text-danger">{{ form.PreisProNachtZumZeitpunkt.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.GesamtPreis.label(class="form-label") }}
+            {{ form.GesamtPreis(class="form-control", step="0.01") }}
+            {% if form.GesamtPreis.errors %}
+            <div class="text-danger">{{ form.GesamtPreis.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('list_reservierungsdetails') }}" class="btn btn-secondary">Abbrechen</a>
+</form>
+{% endblock %}
+

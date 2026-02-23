@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if form.CheckInDatum.data %}Reservierung bearbeiten{% else %}Neue Reservierung{% endif %}</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.GastID.label(class="form-label") }}
+            {{ form.GastID(class="form-select") }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.PartnerID.label(class="form-label") }}
+            {{ form.PartnerID(class="form-select") }}
+        </div>
+    </div>
+    {% if form.GastID.errors or form.PartnerID.errors %}
+    <div class="alert alert-danger">
+        Es muss entweder ein Gast oder ein Partner angegeben werden.
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.CheckInDatum.label(class="form-label") }}
+            {{ form.CheckInDatum(class="form-control", type="date") }}
+            {% if form.CheckInDatum.errors %}
+            <div class="text-danger">{{ form.CheckInDatum.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.CheckOutDatum.label(class="form-label") }}
+            {{ form.CheckOutDatum(class="form-control", type="date") }}
+            {% if form.CheckOutDatum.errors %}
+            <div class="text-danger">{{ form.CheckOutDatum.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            {{ form.AnzahlNaechte.label(class="form-label") }}
+            {{ form.AnzahlNaechte(class="form-control") }}
+            {% if form.AnzahlNaechte.errors %}
+            <div class="text-danger">{{ form.AnzahlNaechte.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.ReservierungsReferenz.label(class="form-label") }}
+            {{ form.ReservierungsReferenz(class="form-control") }}
+        </div>
+        <div class="col-md-4 mb-3">
+            {{ form.ReservierungsStatus.label(class="form-label") }}
+            {{ form.ReservierungsStatus(class="form-select") }}
+            {% if form.ReservierungsStatus.errors %}
+            <div class="text-danger">{{ form.ReservierungsStatus.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('list_reservierungen') }}" class="btn btn-secondary">Abbrechen</a>
+</form>
+{% endblock %}
+

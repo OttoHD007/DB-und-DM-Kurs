@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Zimmerkategorie bearbeiten</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.Name.label(class="form-label") }}
+        {{ form.Name(class="form-control") }}
+        {% if form.Name.errors %}
+        <div class="text-danger">{{ form.Name.errors[0] }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        {{ form.Beschreibung.label(class="form-label") }}
+        {{ form.Beschreibung(class="form-control", rows=3) }}
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.MaxPersonen.label(class="form-label") }}
+            {{ form.MaxPersonen(class="form-control") }}
+            {% if form.MaxPersonen.errors %}
+            <div class="text-danger">{{ form.MaxPersonen.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.AnzahlBetten.label(class="form-label") }}
+            {{ form.AnzahlBetten(class="form-control") }}
+            {% if form.AnzahlBetten.errors %}
+            <div class="text-danger">{{ form.AnzahlBetten.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('list_kategorien') }}" class="btn btn-secondary">Abbrechen</a>
+</form>
+{% endblock %}
+

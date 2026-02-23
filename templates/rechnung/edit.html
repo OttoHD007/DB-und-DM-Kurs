@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Rechnung bearbeiten</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.RechnungsNummer.label(class="form-label") }}
+            {{ form.RechnungsNummer(class="form-control") }}
+            {% if form.RechnungsNummer.errors %}
+            <div class="text-danger">{{ form.RechnungsNummer.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.ReservierungsID.label(class="form-label") }}
+            {{ form.ReservierungsID(class="form-select") }}
+            {% if form.ReservierungsID.errors %}
+            <div class="text-danger">{{ form.ReservierungsID.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.RechnungsDatum.label(class="form-label") }}
+            {{ form.RechnungsDatum(class="form-control", type="date") }}
+            {% if form.RechnungsDatum.errors %}
+            <div class="text-danger">{{ form.RechnungsDatum.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.Faelligkeitsdatum.label(class="form-label") }}
+            {{ form.Faelligkeitsdatum(class="form-control", type="date") }}
+            {% if form.Faelligkeitsdatum.errors %}
+            <div class="text-danger">{{ form.Faelligkeitsdatum.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.BetragGesamt.label(class="form-label") }}
+            {{ form.BetragGesamt(class="form-control", step="0.01") }}
+            {% if form.BetragGesamt.errors %}
+            <div class="text-danger">{{ form.BetragGesamt.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.RechnungsStatus.label(class="form-label") }}
+            {{ form.RechnungsStatus(class="form-select") }}
+            {% if form.RechnungsStatus.errors %}
+            <div class="text-danger">{{ form.RechnungsStatus.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('list_rechnungen') }}" class="btn btn-secondary">Abbrechen</a>
+</form>
+{% endblock %}
+

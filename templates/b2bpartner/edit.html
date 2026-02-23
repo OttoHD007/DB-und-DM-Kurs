@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Partner bearbeiten</h1>
+<form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.Name.label(class="form-label") }}
+        {{ form.Name(class="form-control") }}
+        {% if form.Name.errors %}
+        <div class="text-danger">{{ form.Name.errors[0] }}</div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.Typ.label(class="form-label") }}
+            {{ form.Typ(class="form-select") }}
+            {% if form.Typ.errors %}
+            <div class="text-danger">{{ form.Typ.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.Status.label(class="form-label") }}
+            {{ form.Status(class="form-select") }}
+            {% if form.Status.errors %}
+            <div class="text-danger">{{ form.Status.errors[0] }}</div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form.Email.label(class="form-label") }}
+            {{ form.Email(class="form-control", type="email") }}
+            {% if form.Email.errors %}
+            <div class="text-danger">{{ form.Email.errors[0] }}</div>
+            {% endif %}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form.Telefon.label(class="form-label") }}
+            {{ form.Telefon(class="form-control") }}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('list_partner') }}" class="btn btn-secondary">Abbrechen</a>
+</form>
+{% endblock %}
+
