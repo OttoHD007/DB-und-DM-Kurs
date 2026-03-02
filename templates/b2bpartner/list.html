@@ -1,44 +1,67 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>B2B Partner</h1>
-<a href="{{ url_for('create_partner') }}" class="btn btn-primary mb-3">Neuer Partner</a>
-<table class="table table-striped table-hover">
-    <thead><tr>
-        {% set cols = [('PartnerID','ID'),('Name','Name'),('Typ','Typ'),('Email','Email'),('Telefon','Telefon'),('Status','Status')] %}
-        {% for col, label in cols %}
-        {% set next_dir = 'asc' if (sort == col and dir == 'desc') else 'desc' %}
-        <th class="sortable {% if sort == col %}sort-{{ dir }}{% endif %}">
-            <a href="{{ url_for('list_partner', sort=col, dir=next_dir, page=1) }}" class="text-white text-decoration-none">{{ label }}<span class="sort-icon"></span></a>
-        </th>
-        {% endfor %}
-        <th>Aktionen</th>
-    </tr></thead>
-    <tbody>
-    {% for p in partner.items %}
-    <tr>
-        <td>{{ p.PartnerID }}</td>
-        <td>{{ p.Name }}</td>
-        <td>{{ p.Typ }}</td>
-        <td>{{ p.Email or '-' }}</td>
-        <td>{{ p.Telefon or '-' }}</td>
-        <td><span class="badge bg-{% if p.Status == 'aktiv' %}success{% elif p.Status == 'inaktiv' %}warning{% else %}danger{% endif %}">{{ p.Status }}</span></td>
-        <td>
-            <a href="{{ url_for('edit_partner', id=p.PartnerID) }}" class="btn btn-sm btn-warning">Bearbeiten</a>
-            <form action="{{ url_for('delete_partner', id=p.PartnerID) }}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Wirklich löschen?')">Löschen</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
-<nav><ul class="pagination">
-    {% if partner.has_prev %}<li class="page-item"><a class="page-link" href="{{ url_for('list_partner', page=partner.prev_num, sort=sort, dir=dir) }}">Zurück</a></li>{% endif %}
-    {% for p in partner.iter_pages() %}
-        {% if p %}<li class="page-item {% if p == partner.page %}active{% endif %}"><a class="page-link" href="{{ url_for('list_partner', page=p, sort=sort, dir=dir) }}">{{ p }}</a></li>
-        {% else %}<li class="page-item disabled"><span class="page-link">…</span></li>{% endif %}
-    {% endfor %}
-    {% if partner.has_next %}<li class="page-item"><a class="page-link" href="{{ url_for('list_partner', page=partner.next_num, sort=sort, dir=dir) }}">Weiter</a></li>{% endif %}
-</ul></nav>
+<section class="page-section">
+    <div class="page-inner">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">B2B Partner</h1>
+                <p class="page-subtitle">Geschäftspartner und deren Status verwalten</p>
+            </div>
+            <a href="{{ url_for('create_partner') }}" class="btn btn-primary">+ Neuer Partner</a>
+        </div>
+
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="suite-table">
+                    <thead>
+                    <tr>
+                        {% set cols = [('PartnerID','ID'),('Name','Name'),('Typ','Typ'),('Email','Email'),('Telefon','Telefon'),('Status','Status')] %}
+                        {% for col, label in cols %}
+                        {% set next_dir = 'asc' if (sort == col and dir == 'desc') else 'desc' %}
+                        <th class="sortable {% if sort == col %}sort-{{ dir }}{% endif %}">
+                            <a href="{{ url_for('list_partner', sort=col, dir=next_dir, page=1) }}">{{ label }}<span class="sort-icon"></span></a>
+                        </th>
+                        {% endfor %}
+                        <th class="th-actions">Aktionen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in partner.items %}
+                    <tr>
+                        <td class="td-id">{{ p.PartnerID }}</td>
+                        <td class="td-bold">{{ p.Name }}</td>
+                        <td>{{ p.Typ }}</td>
+                        <td>{{ p.Email or '—' }}</td>
+                        <td>{{ p.Telefon or '—' }}</td>
+                        <td>
+                            <span class="pill pill-{% if p.Status == 'aktiv' %}green{% elif p.Status == 'inaktiv' %}orange{% else %}red{% endif %}">{{ p.Status }}</span>
+                        </td>
+                        <td>
+                            <div class="action-group">
+                                <a href="{{ url_for('edit_partner', id=p.PartnerID) }}" class="btn-action btn-action-edit">Bearbeiten</a>
+                                <form action="{{ url_for('delete_partner', id=p.PartnerID) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn-action btn-action-delete" onclick="return confirm('Wirklich löschen?')">Löschen</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <nav class="suite-pagination">
+            <ul>
+                {% if partner.has_prev %}<li><a href="{{ url_for('list_partner', page=partner.prev_num, sort=sort, dir=dir) }}">← Zurück</a></li>{% endif %}
+                {% for p in partner.iter_pages() %}
+                    {% if p %}<li class="{% if p == partner.page %}active{% endif %}"><a href="{{ url_for('list_partner', page=p, sort=sort, dir=dir) }}">{{ p }}</a></li>
+                    {% else %}<li class="ellipsis"><span>…</span></li>{% endif %}
+                {% endfor %}
+                {% if partner.has_next %}<li><a href="{{ url_for('list_partner', page=partner.next_num, sort=sort, dir=dir) }}">Weiter →</a></li>{% endif %}
+            </ul>
+        </nav>
+    </div>
+</section>
 {% endblock %}

@@ -9,12 +9,13 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Admin187@localhost:5432'
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
     f"@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME')}"
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.getenv('CSRF_SECRET_KEY')
 
 db.init_app(app)
 
@@ -24,19 +25,58 @@ with app.app_context():
 # ---------- Dashboard ----------
 @app.route('/')
 def index():
+    today = datetime.now().date()
+
+    # Zimmer-Statistiken
     zimmer_count = Zimmer.query.count()
     zimmer_frei = Zimmer.query.filter_by(Status='verfügbar').count()
     zimmer_besetzt = Zimmer.query.filter_by(Status='besetzt').count()
     zimmer_wartung = Zimmer.query.filter_by(Status='wartung').count()
-    aktive_reservierungen = Reservierung.query.filter(Reservierung.CheckOutDatum >= datetime.now().date()).count()
+    auslastung = round((zimmer_besetzt / zimmer_count * 100) if zimmer_count > 0 else 0, 1)
+
+    # Reservierungen
+    aktive_reservierungen = Reservierung.query.filter(Reservierung.CheckOutDatum >= today).count()
+    heutige_checkins = Reservierung.query.filter(Reservierung.CheckInDatum == today).count()
+    heutige_checkouts = Reservierung.query.filter(Reservierung.CheckOutDatum == today).count()
+
+    # Rechnungen
     offene_rechnungen = Rechnung.query.filter(Rechnung.RechnungsStatus.in_(['offen', 'teilbezahlt'])).count()
+    ueberfaellige_rechnungen = Rechnung.query.filter(
+        Rechnung.RechnungsStatus.in_(['offen', 'teilbezahlt']),
+        Rechnung.Faelligkeitsdatum < today
+    ).count()
+    from sqlalchemy import func
+    umsatz_gesamt = db.session.query(func.coalesce(func.sum(Rechnung.BetragGesamt), 0)).filter(
+        Rechnung.RechnungsStatus == 'bezahlt'
+    ).scalar()
+
+    # Zählungen
+    gaeste_count = Gast.query.count()
+    partner_count = B2BPartner.query.filter_by(Status='aktiv').count()
+    vertraege_aktiv = Vertrag.query.filter(Vertrag.VertragsStatus == 'aktiv', Vertrag.BisDatum >= today).count()
+    kategorien_count = Zimmerkategorie.query.count()
+
+    # Letzte Reservierungen
+    letzte_reservierungen = Reservierung.query.order_by(Reservierung.ErstelltAm.desc()).limit(5).all()
+
     return render_template('index.html',
                            zimmer_count=zimmer_count,
                            zimmer_frei=zimmer_frei,
                            zimmer_besetzt=zimmer_besetzt,
                            zimmer_wartung=zimmer_wartung,
+                           auslastung=auslastung,
                            aktive_reservierungen=aktive_reservierungen,
-                           offene_rechnungen=offene_rechnungen)
+                           heutige_checkins=heutige_checkins,
+                           heutige_checkouts=heutige_checkouts,
+                           offene_rechnungen=offene_rechnungen,
+                           ueberfaellige_rechnungen=ueberfaellige_rechnungen,
+                           umsatz_gesamt=umsatz_gesamt,
+                           gaeste_count=gaeste_count,
+                           partner_count=partner_count,
+                           vertraege_aktiv=vertraege_aktiv,
+                           kategorien_count=kategorien_count,
+                           letzte_reservierungen=letzte_reservierungen,
+                           today=today)
 
 # ---------- Zimmerkategorie ----------
 @app.route('/kategorien')

@@ -1,62 +1,64 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Reservierung bearbeiten</h1>
-<form method="post">
-    {{ form.hidden_tag() }}
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form.GastID.label(class="form-label") }}
-            {{ form.GastID(class="form-select") }}
+<section class="page-section">
+    <div class="page-inner page-inner-narrow">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Reservierung bearbeiten</h1>
+                <p class="page-subtitle">Reservierungsdaten aktualisieren</p>
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            {{ form.PartnerID.label(class="form-label") }}
-            {{ form.PartnerID(class="form-select") }}
+        <div class="form-card">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form.GastID.label(class="form-label") }}
+                        {{ form.GastID(class="form-select") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.PartnerID.label(class="form-label") }}
+                        {{ form.PartnerID(class="form-select") }}
+                    </div>
+                </div>
+                {% if form.GastID.errors or form.PartnerID.errors %}
+                <div class="field-error" style="margin-bottom:16px">Es muss entweder ein Gast oder ein Partner angegeben werden.</div>
+                {% endif %}
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form.CheckInDatum.label(class="form-label") }}
+                        {{ form.CheckInDatum(class="form-control", type="date") }}
+                        {% if form.CheckInDatum.errors %}<div class="field-error">{{ form.CheckInDatum.errors[0] }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.CheckOutDatum.label(class="form-label") }}
+                        {{ form.CheckOutDatum(class="form-control", type="date") }}
+                        {% if form.CheckOutDatum.errors %}<div class="field-error">{{ form.CheckOutDatum.errors[0] }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row form-row-3">
+                    <div class="form-group">
+                        {{ form.AnzahlNaechte.label(class="form-label") }}
+                        {{ form.AnzahlNaechte(class="form-control") }}
+                        {% if form.AnzahlNaechte.errors %}<div class="field-error">{{ form.AnzahlNaechte.errors[0] }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.ReservierungsReferenz.label(class="form-label") }}
+                        {{ form.ReservierungsReferenz(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.ReservierungsStatus.label(class="form-label") }}
+                        {{ form.ReservierungsStatus(class="form-select") }}
+                        {% if form.ReservierungsStatus.errors %}<div class="field-error">{{ form.ReservierungsStatus.errors[0] }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-actions">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('list_reservierungen') }}" class="btn btn-secondary">Abbrechen</a>
+                </div>
+            </form>
         </div>
     </div>
-    {% if form.GastID.errors or form.PartnerID.errors %}
-    <div class="alert alert-danger">
-        Es muss entweder ein Gast oder ein Partner angegeben werden.
-    </div>
-    {% endif %}
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form.CheckInDatum.label(class="form-label") }}
-            {{ form.CheckInDatum(class="form-control", type="date") }}
-            {% if form.CheckInDatum.errors %}
-            <div class="text-danger">{{ form.CheckInDatum.errors[0] }}</div>
-            {% endif %}
-        </div>
-        <div class="col-md-6 mb-3">
-            {{ form.CheckOutDatum.label(class="form-label") }}
-            {{ form.CheckOutDatum(class="form-control", type="date") }}
-            {% if form.CheckOutDatum.errors %}
-            <div class="text-danger">{{ form.CheckOutDatum.errors[0] }}</div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            {{ form.AnzahlNaechte.label(class="form-label") }}
-            {{ form.AnzahlNaechte(class="form-control") }}
-            {% if form.AnzahlNaechte.errors %}
-            <div class="text-danger">{{ form.AnzahlNaechte.errors[0] }}</div>
-            {% endif %}
-        </div>
-        <div class="col-md-4 mb-3">
-            {{ form.ReservierungsReferenz.label(class="form-label") }}
-            {{ form.ReservierungsReferenz(class="form-control") }}
-        </div>
-        <div class="col-md-4 mb-3">
-            {{ form.ReservierungsStatus.label(class="form-label") }}
-            {{ form.ReservierungsStatus(class="form-select") }}
-            {% if form.ReservierungsStatus.errors %}
-            <div class="text-danger">{{ form.ReservierungsStatus.errors[0] }}</div>
-            {% endif %}
-        </div>
-    </div>
-    {{ form.submit(class="btn btn-primary") }}
-    <a href="{{ url_for('list_reservierungen') }}" class="btn btn-secondary">Abbrechen</a>
-</form>
+</section>
 {% endblock %}
-

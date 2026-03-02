@@ -1,32 +1,239 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Dashboard</h1>
-<div class="row">
-    <div class="col-md-4">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-header">Zimmer</div>
-            <div class="card-body">
-                <h5 class="card-title">Gesamt: {{ zimmer_count }}</h5>
-                <p class="card-text">Frei: {{ zimmer_frei }} | Besetzt: {{ zimmer_besetzt }} | Wartung: {{ zimmer_wartung }}</p>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="hero-eyebrow">B2B Hotel Management</p>
+        <h1 class="hero-title">HotelSuite.</h1>
+        <p class="hero-subtitle">Alles im Blick. Jederzeit.</p>
+        <div class="hero-date">{{ today.strftime('%A, %d. %B %Y') }}</div>
+    </div>
+</section>
+
+<!-- KPI Ticker -->
+<section class="kpi-ticker">
+    <div class="kpi-ticker-inner">
+        <div class="kpi-item">
+            <span class="kpi-value">{{ auslastung }}%</span>
+            <span class="kpi-label">Auslastung</span>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item">
+            <span class="kpi-value">{{ heutige_checkins }}</span>
+            <span class="kpi-label">Check-ins heute</span>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item">
+            <span class="kpi-value">{{ heutige_checkouts }}</span>
+            <span class="kpi-label">Check-outs heute</span>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi-item">
+            <span class="kpi-value">€{{ "{:,.2f}".format(umsatz_gesamt|float).replace(",", "X").replace(".", ",").replace("X", ".") }}</span>
+            <span class="kpi-label">Gesamtumsatz</span>
+        </div>
+    </div>
+</section>
+
+<!-- Zimmer Overview -->
+<section class="dash-section">
+    <div class="section-inner">
+        <h2 class="section-title">Zimmerübersicht</h2>
+        <p class="section-subtitle">{{ zimmer_count }} Zimmer in {{ kategorien_count }} Kategorien</p>
+
+        <div class="stat-grid stat-grid-4">
+            <div class="stat-card stat-card-blue">
+                <div class="stat-number">{{ zimmer_count }}</div>
+                <div class="stat-label">Gesamt</div>
+                <div class="stat-icon">🏨</div>
+            </div>
+            <div class="stat-card stat-card-green">
+                <div class="stat-number">{{ zimmer_frei }}</div>
+                <div class="stat-label">Verfügbar</div>
+                <div class="stat-icon">✓</div>
+            </div>
+            <div class="stat-card stat-card-red">
+                <div class="stat-number">{{ zimmer_besetzt }}</div>
+                <div class="stat-label">Besetzt</div>
+                <div class="stat-icon">●</div>
+            </div>
+            <div class="stat-card stat-card-orange">
+                <div class="stat-number">{{ zimmer_wartung }}</div>
+                <div class="stat-label">Wartung</div>
+                <div class="stat-icon">⚙</div>
+            </div>
+        </div>
+
+        <!-- Auslastungs-Bar -->
+        <div class="occupancy-bar-wrapper">
+            <div class="occupancy-bar">
+                {% if zimmer_count > 0 %}
+                <div class="occupancy-segment occupancy-besetzt" style="width: {{ (zimmer_besetzt / zimmer_count * 100)|round(1) }}%"></div>
+                <div class="occupancy-segment occupancy-wartung" style="width: {{ (zimmer_wartung / zimmer_count * 100)|round(1) }}%"></div>
+                <div class="occupancy-segment occupancy-frei" style="width: {{ (zimmer_frei / zimmer_count * 100)|round(1) }}%"></div>
+                {% endif %}
+            </div>
+            <div class="occupancy-legend">
+                <span><i class="dot dot-green"></i> Verfügbar</span>
+                <span><i class="dot dot-red"></i> Besetzt</span>
+                <span><i class="dot dot-orange"></i> Wartung</span>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-header">Reservierungen</div>
-            <div class="card-body">
-                <h5 class="card-title">Aktive: {{ aktive_reservierungen }}</h5>
+</section>
+
+<!-- Dark Section: Reservierungen & Rechnungen -->
+<section class="dash-section dash-section-dark">
+    <div class="section-inner">
+        <div class="split-grid">
+            <div class="split-card">
+                <h2 class="section-title light">Reservierungen</h2>
+                <p class="section-subtitle light">Aktive & heutige Übersicht</p>
+                <div class="big-number-row">
+                    <div class="big-number-item">
+                        <div class="big-number">{{ aktive_reservierungen }}</div>
+                        <div class="big-label">Aktive</div>
+                    </div>
+                    <div class="big-number-item">
+                        <div class="big-number accent-blue">{{ heutige_checkins }}</div>
+                        <div class="big-label">Check-in heute</div>
+                    </div>
+                    <div class="big-number-item">
+                        <div class="big-number accent-purple">{{ heutige_checkouts }}</div>
+                        <div class="big-label">Check-out heute</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('list_reservierungen') }}" class="action-link">Alle Reservierungen →</a>
+            </div>
+
+            <div class="split-card">
+                <h2 class="section-title light">Rechnungen</h2>
+                <p class="section-subtitle light">Offene & überfällige</p>
+                <div class="big-number-row">
+                    <div class="big-number-item">
+                        <div class="big-number accent-orange">{{ offene_rechnungen }}</div>
+                        <div class="big-label">Offen</div>
+                    </div>
+                    <div class="big-number-item">
+                        <div class="big-number accent-red">{{ ueberfaellige_rechnungen }}</div>
+                        <div class="big-label">Überfällig</div>
+                    </div>
+                    <div class="big-number-item">
+                        <div class="big-number accent-green">€{{ "{:,.0f}".format(umsatz_gesamt|float).replace(",", ".") }}</div>
+                        <div class="big-label">Bezahlt</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('list_rechnungen') }}" class="action-link">Alle Rechnungen →</a>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-warning mb-3">
-            <div class="card-header">Rechnungen</div>
-            <div class="card-body">
-                <h5 class="card-title">Offen: {{ offene_rechnungen }}</h5>
-            </div>
+</section>
+
+<!-- Quick Stats: Gäste, Partner, Verträge -->
+<section class="dash-section">
+    <div class="section-inner">
+        <h2 class="section-title">Netzwerk</h2>
+        <p class="section-subtitle">Partner, Gäste und Verträge auf einen Blick</p>
+
+        <div class="stat-grid stat-grid-3">
+            <a href="{{ url_for('list_gaeste') }}" class="stat-card-link">
+                <div class="stat-card stat-card-glass">
+                    <div class="stat-number">{{ gaeste_count }}</div>
+                    <div class="stat-label">Gäste</div>
+                    <div class="stat-icon">👤</div>
+                </div>
+            </a>
+            <a href="{{ url_for('list_partner') }}" class="stat-card-link">
+                <div class="stat-card stat-card-glass">
+                    <div class="stat-number">{{ partner_count }}</div>
+                    <div class="stat-label">Aktive B2B Partner</div>
+                    <div class="stat-icon">🤝</div>
+                </div>
+            </a>
+            <a href="{{ url_for('list_vertraege') }}" class="stat-card-link">
+                <div class="stat-card stat-card-glass">
+                    <div class="stat-number">{{ vertraege_aktiv }}</div>
+                    <div class="stat-label">Laufende Verträge</div>
+                    <div class="stat-icon">📜</div>
+                </div>
+            </a>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Letzte Reservierungen -->
+{% if letzte_reservierungen %}
+<section class="dash-section dash-section-subtle">
+    <div class="section-inner">
+        <h2 class="section-title">Letzte Reservierungen</h2>
+        <p class="section-subtitle">Die neuesten Buchungen im System</p>
+
+        <div class="recent-table-wrapper">
+            <table class="recent-table">
+                <thead>
+                    <tr>
+                        <th>Referenz</th>
+                        <th>Gast</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Nächte</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in letzte_reservierungen %}
+                    <tr>
+                        <td><strong>{{ r.ReservierungsReferenz or '—' }}</strong></td>
+                        <td>{{ r.gast if r.gast else (r.partner if r.partner else '—') }}</td>
+                        <td>{{ r.CheckInDatum.strftime('%d.%m.%Y') }}</td>
+                        <td>{{ r.CheckOutDatum.strftime('%d.%m.%Y') }}</td>
+                        <td>{{ r.AnzahlNaechte }}</td>
+                        <td>
+                            <span class="pill pill-{{ 'green' if r.ReservierungsStatus == 'bestätigt' else ('red' if r.ReservierungsStatus == 'storniert' else 'blue') }}">
+                                {{ r.ReservierungsStatus }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="{{ url_for('list_reservierungen') }}" class="action-link dark">Alle anzeigen →</a>
+    </div>
+</section>
+{% endif %}
+
+<!-- Quick Actions -->
+<section class="dash-section">
+    <div class="section-inner">
+        <h2 class="section-title">Schnellzugriff</h2>
+        <div class="quick-actions">
+            <a href="{{ url_for('create_reservierung') }}" class="quick-action-btn">
+                <span class="qa-icon">📅</span>
+                <span class="qa-text">Neue Reservierung</span>
+            </a>
+            <a href="{{ url_for('create_gast') }}" class="quick-action-btn">
+                <span class="qa-icon">👤</span>
+                <span class="qa-text">Neuer Gast</span>
+            </a>
+            <a href="{{ url_for('create_rechnung') }}" class="quick-action-btn">
+                <span class="qa-icon">💰</span>
+                <span class="qa-text">Neue Rechnung</span>
+            </a>
+            <a href="{{ url_for('create_partner') }}" class="quick-action-btn">
+                <span class="qa-icon">🤝</span>
+                <span class="qa-text">Neuer Partner</span>
+            </a>
+            <a href="{{ url_for('create_zimmer') }}" class="quick-action-btn">
+                <span class="qa-icon">🛏️</span>
+                <span class="qa-text">Neues Zimmer</span>
+            </a>
+            <a href="{{ url_for('create_vertrag') }}" class="quick-action-btn">
+                <span class="qa-icon">📜</span>
+                <span class="qa-text">Neuer Vertrag</span>
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}

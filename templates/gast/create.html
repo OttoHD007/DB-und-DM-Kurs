@@ -1,40 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{% if form.Vorname.data %}Gast bearbeiten{% else %}Neuer Gast{% endif %}</h1>
-<form method="post">
-    {{ form.hidden_tag() }}
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form.Vorname.label(class="form-label") }}
-            {{ form.Vorname(class="form-control") }}
-            {% if form.Vorname.errors %}
-            <div class="text-danger">{{ form.Vorname.errors[0] }}</div>
-            {% endif %}
+<section class="page-section">
+    <div class="page-inner page-inner-narrow">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">{% if form.Vorname.data %}Gast bearbeiten{% else %}Neuer Gast{% endif %}</h1>
+                <p class="page-subtitle">Gastdaten erfassen</p>
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            {{ form.Nachname.label(class="form-label") }}
-            {{ form.Nachname(class="form-control") }}
-            {% if form.Nachname.errors %}
-            <div class="text-danger">{{ form.Nachname.errors[0] }}</div>
-            {% endif %}
+        <div class="form-card">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form.Vorname.label(class="form-label") }}
+                        {{ form.Vorname(class="form-control") }}
+                        {% if form.Vorname.errors %}<div class="field-error">{{ form.Vorname.errors[0] }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.Nachname.label(class="form-label") }}
+                        {{ form.Nachname(class="form-control") }}
+                        {% if form.Nachname.errors %}<div class="field-error">{{ form.Nachname.errors[0] }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form.Email.label(class="form-label") }}
+                        {{ form.Email(class="form-control", type="email") }}
+                        {% if form.Email.errors %}<div class="field-error">{{ form.Email.errors[0] }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.Telefon.label(class="form-label") }}
+                        {{ form.Telefon(class="form-control") }}
+                    </div>
+                </div>
+                <div class="form-actions">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('list_gaeste') }}" class="btn btn-secondary">Abbrechen</a>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form.Email.label(class="form-label") }}
-            {{ form.Email(class="form-control", type="email") }}
-            {% if form.Email.errors %}
-            <div class="text-danger">{{ form.Email.errors[0] }}</div>
-            {% endif %}
-        </div>
-        <div class="col-md-6 mb-3">
-            {{ form.Telefon.label(class="form-label") }}
-            {{ form.Telefon(class="form-control") }}
-        </div>
-    </div>
-    {{ form.submit(class="btn btn-primary") }}
-    <a href="{{ url_for('list_gaeste') }}" class="btn btn-secondary">Abbrechen</a>
-</form>
+</section>
 {% endblock %}
-

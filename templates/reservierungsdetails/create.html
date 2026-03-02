@@ -1,50 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{% if form.AnzahlZimmer.data %}Detail bearbeiten{% else %}Neues Detail{% endif %}</h1>
-<form method="post">
-    {{ form.hidden_tag() }}
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form.ReservierungsID.label(class="form-label") }}
-            {{ form.ReservierungsID(class="form-select") }}
-            {% if form.ReservierungsID.errors %}
-            <div class="text-danger">{{ form.ReservierungsID.errors[0] }}</div>
-            {% endif %}
+<section class="page-section">
+    <div class="page-inner page-inner-narrow">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">{% if form.AnzahlZimmer.data %}Detail bearbeiten{% else %}Neues Detail{% endif %}</h1>
+                <p class="page-subtitle">Reservierungsdetails erfassen</p>
+            </div>
         </div>
-        <div class="col-md-6 mb-3">
-            {{ form.ZimmerID.label(class="form-label") }}
-            {{ form.ZimmerID(class="form-select") }}
-            {% if form.ZimmerID.errors %}
-            <div class="text-danger">{{ form.ZimmerID.errors[0] }}</div>
-            {% endif %}
+        <div class="form-card">
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form.ReservierungsID.label(class="form-label") }}
+                        {{ form.ReservierungsID(class="form-select") }}
+                        {% if form.ReservierungsID.errors %}<div class="field-error">{{ form.ReservierungsID.errors[0] }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.ZimmerID.label(class="form-label") }}
+                        {{ form.ZimmerID(class="form-select") }}
+                        {% if form.ZimmerID.errors %}<div class="field-error">{{ form.ZimmerID.errors[0] }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row form-row-3">
+                    <div class="form-group">
+                        {{ form.AnzahlZimmer.label(class="form-label") }}
+                        {{ form.AnzahlZimmer(class="form-control") }}
+                        {% if form.AnzahlZimmer.errors %}<div class="field-error">{{ form.AnzahlZimmer.errors[0] }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.PreisProNachtZumZeitpunkt.label(class="form-label") }}
+                        {{ form.PreisProNachtZumZeitpunkt(class="form-control", step="0.01") }}
+                        {% if form.PreisProNachtZumZeitpunkt.errors %}<div class="field-error">{{ form.PreisProNachtZumZeitpunkt.errors[0] }}</div>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.GesamtPreis.label(class="form-label") }}
+                        {{ form.GesamtPreis(class="form-control", step="0.01") }}
+                        {% if form.GesamtPreis.errors %}<div class="field-error">{{ form.GesamtPreis.errors[0] }}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-actions">
+                    {{ form.submit(class="btn btn-primary") }}
+                    <a href="{{ url_for('list_reservierungsdetails') }}" class="btn btn-secondary">Abbrechen</a>
+                </div>
+            </form>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            {{ form.AnzahlZimmer.label(class="form-label") }}
-            {{ form.AnzahlZimmer(class="form-control") }}
-            {% if form.AnzahlZimmer.errors %}
-            <div class="text-danger">{{ form.AnzahlZimmer.errors[0] }}</div>
-            {% endif %}
-        </div>
-        <div class="col-md-4 mb-3">
-            {{ form.PreisProNachtZumZeitpunkt.label(class="form-label") }}
-            {{ form.PreisProNachtZumZeitpunkt(class="form-control", step="0.01") }}
-            {% if form.PreisProNachtZumZeitpunkt.errors %}
-            <div class="text-danger">{{ form.PreisProNachtZumZeitpunkt.errors[0] }}</div>
-            {% endif %}
-        </div>
-        <div class="col-md-4 mb-3">
-            {{ form.GesamtPreis.label(class="form-label") }}
-            {{ form.GesamtPreis(class="form-control", step="0.01") }}
-            {% if form.GesamtPreis.errors %}
-            <div class="text-danger">{{ form.GesamtPreis.errors[0] }}</div>
-            {% endif %}
-        </div>
-    </div>
-    {{ form.submit(class="btn btn-primary") }}
-    <a href="{{ url_for('list_reservierungsdetails') }}" class="btn btn-secondary">Abbrechen</a>
-</form>
+</section>
 {% endblock %}
-
